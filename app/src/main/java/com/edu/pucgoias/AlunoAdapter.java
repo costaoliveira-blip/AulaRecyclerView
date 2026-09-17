@@ -23,49 +23,88 @@ public class AlunoAdapter extends ListAdapter<Aluno, AlunoAdapter.AlunoViewHolde
         this.listener = listener;
     }
 
-    private static final DiffUtil.ItemCallback<Aluno> DIFF_CALLBACK = new DiffUtil.ItemCallback<Aluno>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Aluno oldItem, @NonNull Aluno newItem) {
-            return oldItem.getMatricula().equals(newItem.getMatricula());
-        }
+    private static final DiffUtil.ItemCallback<Aluno> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Aluno>() {
 
-        @Override
-        public boolean areContentsTheSame(@NonNull Aluno oldItem, @NonNull Aluno newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
+                @Override
+                public boolean areItemsTheSame(
+                        @NonNull Aluno oldItem,
+                        @NonNull Aluno newItem) {
+
+                    return oldItem.getMatricula()
+                            .equals(newItem.getMatricula());
+                }
+
+                @Override
+                public boolean areContentsTheSame(
+                        @NonNull Aluno oldItem,
+                        @NonNull Aluno newItem) {
+
+                    return oldItem.equals(newItem);
+                }
+            };
 
     @NonNull
     @Override
-    public AlunoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AlunoViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType) {
+
         LayoutListaBinding binding = LayoutListaBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false
+                LayoutInflater.from(parent.getContext()),
+                parent,
+                false
         );
+
         return new AlunoViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlunoViewHolder holder, int position) {
+    public void onBindViewHolder(
+            @NonNull AlunoViewHolder holder,
+            int position) {
+
         Aluno aluno = getItem(position);
+
         holder.bind(aluno, listener);
     }
 
-    public static class AlunoViewHolder extends RecyclerView.ViewHolder {
+    public static class AlunoViewHolder
+            extends RecyclerView.ViewHolder {
+
         private final LayoutListaBinding binding;
 
-        public AlunoViewHolder(@NonNull LayoutListaBinding binding) {
+        public AlunoViewHolder(
+                @NonNull LayoutListaBinding binding) {
+
             super(binding.getRoot());
+
             this.binding = binding;
         }
 
-        public void bind(Aluno aluno, OnItemClickListener listener) {
+        public void bind(
+                Aluno aluno,
+                OnItemClickListener listener) {
+
             binding.texto1.setText(aluno.getNome());
-            binding.texto2.setText("Matrícula: " + aluno.getMatricula());
-            binding.texto3.setText(aluno.getStatus());
+
+            binding.texto2.setText(
+                    "Matrícula: " + aluno.getMatricula()
+            );
+
+            binding.texto3.setText(
+                    aluno.getStatus()
+            );
 
             itemView.setOnClickListener(v -> {
+
                 if (listener != null) {
-                    listener.onItemClick(aluno, getAdapterPosition());
+
+                    int position = getBindingAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(aluno, position);
+                    }
                 }
             });
         }
